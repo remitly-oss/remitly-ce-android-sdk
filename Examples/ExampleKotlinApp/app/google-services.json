@@ -1,0 +1,57 @@
+{
+  "project_info": {
+    "project_number": "946464332815",
+    "firebase_url": "https://beamitmobile-com-remitly.firebaseio.com",
+    "project_id": "beamitmobile.com:remitly"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946464332815:android:237467e2d606f4cd6e977a",
+        "android_client_info": {
+          "package_name": "com.example.remitlyceapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "946464332815-o4nlg43i9hgo6169jj0kkp1nbh1d4ah6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.remitlyceapp",
+            "certificate_hash": "e7823444580005111a0bb68f599130f7f1fb8206"
+          }
+        },
+        {
+          "client_id": "946464332815-47oe6l10sqnfvnrdmqkiruvi1jc3tu6t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDShvBoja4zcgwib412OoOncQSoYAO6vW8"
+        },
+        {
+          "current_key": "AIzaSyCKGTQx5GFsYMzVcCmxCWbpot40gA2a950"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "946464332815-47oe6l10sqnfvnrdmqkiruvi1jc3tu6t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "946464332815-hlu8b0kegt1svor2vigtvhp4hk3ma0ud.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.remitly.internal"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

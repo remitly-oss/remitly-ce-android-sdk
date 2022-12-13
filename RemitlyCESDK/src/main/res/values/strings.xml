@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_error_heading">Something went wrong</string>
+    <string name="default_error_text">Unfortunately, it seems like there\'s an issue. We are aware of it and are working as hard as we can to restore service.\n\nPlease try again in a few minutes.</string>
+    <string name="default_error_button">More info</string>
+</resources>
