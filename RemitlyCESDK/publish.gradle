@@ -1,0 +1,151 @@
+apply plugin: 'maven-publish'
+apply plugin: "org.jetbrains.dokka"
+apply plugin: "signing"
+
+ext["signing.keyId"] = ''
+ext["signing.password"] = ''
+ext["signing.key"] = ''
+ext["ossrhUsername"] = ''
+ext["ossrhPassword"] = ''
+
+File secretPropsFile = project.file('local.properties')
+if (secretPropsFile.exists()) {
+    Properties p = new Properties()
+    new FileInputStream(secretPropsFile).withCloseable { is ->
+        p.load(is)
+    }
+    p.each {name, value ->
+        ext[name] = value
+    }
+} else {
+    ext["ossrhUsername"] = System.getenv('OSSRH_USERNAME')
+    ext["ossrhPassword"] = System.getenv('OSSRH_PASSWORD')
+    ext['signing.keyId'] = System.getenv('SIGNING_KEY_ID')
+    ext['signing.password'] = System.getenv('SIGNING_PASSWORD')
+    ext["signing.key"] = System.getenv('SIGNING_KEY')
+}
+
+tasks.withType(dokkaHtmlPartial.getClass()).configureEach {
+    pluginsMapConfiguration.set(
+            ["org.jetbrains.dokka.base.DokkaBase": """{ "separateInheritedMembers": true}"""]
+    )
+}
+
+task androidJavadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    archiveClassifier.set('javadoc')
+    from dokkaJavadoc.outputDirectory
+}
+
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    if (project.plugins.findPlugin("com.android.library")) {
+        from android.sourceSets.main.java.srcDirs
+        from android.sourceSets.main.kotlin.srcDirs
+    } else {
+        from sourceSets.main.java.srcDirs
+        from sourceSets.main.kotlin.srcDirs
+    }
+}
+
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocJar
+}
+
+dokkaHtml.configure {
+    dokkaSourceSets {
+        named("main") {
+            noAndroidSdkLink.set(false)
+        }
+    }
+}
+
+tasks.withType(Jar) { task ->
+    task.doLast {
+        ant.checksum algorithm: 'md5', file: it.archivePath
+        ant.checksum algorithm: 'sha1', file: it.archivePath
+        ant.checksum algorithm: 'sha-256', file: it.archivePath, fileext: '.sha256'
+        ant.checksum algorithm: 'sha-512', file: it.archivePath, fileext: '.sha512'
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            Library(MavenPublication) {
+                setGroupId project.groupId
+                setArtifactId project.artifactId
+                version android.defaultConfig.versionName
+
+                artifact bundleReleaseAar //aar artifact you want to publish
+                artifact androidSourcesJar
+                artifact androidJavadocJar
+
+                pom {
+                    name = "${project.groupId}:${project.artifactId}"
+                    packaging = "aar"
+                    description = project.artifactDescription
+                    url = "https://github.com/remitly-oss/remitly-ce-android-sdk"
+
+                    scm {
+                        url = "https://github.com/remitly-oss/remitly-ce-android-sdk/tree/main/RemitlyCESDK"
+                        connection = "scm:git:git://github.com/remitly-oss/remitly-ce-android-sdk.git"
+                        developerConnection = "scm:git:ssh://github.com:Remitly/remitly-ce-android-sdk.git"
+                    }
+
+                    licenses {
+                        license {
+                            name = "MIT License"
+                            url = "http://www.opensource.org/licenses/mit-license.php"
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            name = "Vivek Maskara"
+                            email = "vivekm@remitly.com"
+                            organization = "Remitly"
+                            organizationUrl = "http://www.remitly.com"
+                        }
+                        developer {
+                            name = "Kuba Holuj"
+                            email = "kubah@remitly.com"
+                            organization = "Remitly"
+                            organizationUrl = "http://www.remitly.com"
+                        }
+                    }
+                }
+
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    configurations.implementation.allDependencies.each {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = "OSSRH"
+                setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                credentials {
+                    username project.ext["ossrhUsername"]
+                    password project.ext["ossrhPassword"]
+                }
+            }
+        }
+    }
+}
+
+signing {
+    useInMemoryPgpKeys(
+            project.ext["signing.keyId"],
+            project.ext["signing.key"],
+            project.ext["signing.password"]
+    )
+    sign publishing.publications
+}

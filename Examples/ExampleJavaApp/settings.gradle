@@ -1,0 +1,4 @@
+rootProject.name = "Example CE Project - Java"
+include ':app'
+include ':RemitlyCESDK'
+project(':RemitlyCESDK').projectDir = new File('../../RemitlyCESDK')

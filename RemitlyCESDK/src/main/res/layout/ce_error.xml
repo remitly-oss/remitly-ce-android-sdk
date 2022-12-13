@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ce_error"
+    android:visibility="invisible"
+    android:background="?android:attr/colorBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="40dp"
+    android:gravity="center"
+    android:weightSum="100"
+    >
+    <TextView
+        android:text="@string/default_error_heading"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:paddingVertical="20dp"
+        android:layout_weight="33"
+        android:gravity="bottom"
+        android:textSize="24sp"
+        />
+    <TextView
+        android:text="@string/default_error_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:paddingVertical="20dp"
+        android:textSize="16sp"
+        />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_weight="66"
+        android:paddingVertical="20dp">
+        <Button
+            android:id="@+id/ce_error_button"
+            android:text="@string/default_error_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/remitly_button"
+            android:textColor="@android:color/white"
+            />
+    </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

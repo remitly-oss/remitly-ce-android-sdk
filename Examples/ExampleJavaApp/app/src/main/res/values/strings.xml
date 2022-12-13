@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Example CE Project - Java</string>
+    <string name="send_money">Send Money</string>
+    <string name="log_out">Log Out</string>
+</resources>
